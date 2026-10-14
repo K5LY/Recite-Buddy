@@ -119,12 +119,28 @@ def load(work, name):
 def validate(cfg, CH, WK, CD, TH, TM, QA, PY):
     """一致性校验：返回错误列表（空=通过）。"""
     errs = []
+    # 0. id 合法字符集（防特殊字符注入 onclick / JS 上下文；卡片 id 由脚本自动生成，见 main）
+    ID_RE = re.compile(r'^[A-Za-z0-9_-]+$')
+    for label, items in [('章节', CH), ('人物', WK), ('术语', TM), ('线索', TH)]:
+        for x in items:
+            i = x.get('id')
+            if not i or not isinstance(i, str) or not ID_RE.match(i):
+                errs.append(f'{label} 条目 id 不合法（仅允许字母/数字/_/-）: {i!r}')
     # 1. id 唯一性
     for label, items in [('章节', CH), ('人物', WK), ('术语', TM), ('线索', TH)]:
         ids = [x['id'] for x in items]
         dup = {i for i in ids if ids.count(i) > 1}
         if dup:
             errs.append(f'{label} id 重复: {sorted(dup)}')
+    # 1.1 卡片 id（若数据提供）唯一 + 合法字符集
+    cd_ids = [x['id'] for x in CD if x.get('id')]
+    dup = {i for i in cd_ids if cd_ids.count(i) > 1}
+    if dup:
+        errs.append(f'卡片 id 重复: {sorted(dup)}')
+    for x in CD:
+        i = x.get('id')
+        if i is not None and (not isinstance(i, str) or not ID_RE.match(i)):
+            errs.append(f'卡片 id 不合法（仅允许字母/数字/_/-）: {i!r}')
     # 2. links / terms / works 指向存在
     w_ids = {w['id'] for w in WK}
     t_ids = {t['id'] for t in TM}
@@ -226,6 +242,9 @@ def write_report(CH, QA, path):
         wstats[w] = wstats.get(w, 0) + 1
         if w == '未填写':
             print(f'[build] 警告: 章节 {c["id"]} {c.get("no","")} 缺少 weight/weight_note，请在 chapters.json 补填')
+            books_in_cfg = set((cfg.get('bookmeta') or {}).keys())
+            if c.get('book') and books_in_cfg and c['book'] not in books_in_cfg:
+                print(f'[build] 警告: 章节 {c["id"]} 的 book「{c["book"]}」不在 config.bookmeta 中，将用默认主色渲染')
         lines.append(f'| {c.get("no","")} {c.get("title","")} | {w} | {note} | {n} | {qa_cnt.get(c["id"], 0)} |')
     lines += ['', f'**合计：{total} 个考点**；章节分布：' +
               ' / '.join(f'{k} {v} 章' for k, v in wstats.items())]
@@ -248,6 +267,9 @@ def main():
     CH = load(work, 'chapters.json')
     WK = load(work, 'people.json')
     CD = load(work, 'cards.json')
+    # 卡片 id：数据未提供时按数组顺序自动生成 cd01/cd02…（模板以 c.id 为调度状态键，缺失会导致全部卡片共用状态）
+    for _i, _cd in enumerate(CD, 1):
+        _cd.setdefault('id', f'cd{_i:02d}')
     TH = load(work, 'threads.json')
     TM = load(work, 'terms.json')
     PY = load(work, 'py.json')
@@ -265,10 +287,12 @@ def main():
         except ValueError:
             continue
 
-    # 人物 kind: main=受访核心人物（cfg.main_ids），side=先驱与背景人物
+    # 人物 kind: 数据已显式声明（work=作品/建筑/文物档案、person=人物档案、main/side=核心/背景）则保留；
+    # 未声明时注入 main=受访核心人物（cfg.main_ids）/ side=先驱与背景人物
     main_ids = set(cfg.get('main_ids', []))
     for w in WK:
-        w['kind'] = 'main' if w['id'] in main_ids else 'side'
+        if not w.get('kind'):
+            w['kind'] = 'main' if w['id'] in main_ids else 'side'
 
     # 校验（QA 用原始 {chid-序号} 键格式）
     errs = validate(cfg, CH, WK, CD, TH, TM, qa0, PY)
@@ -287,6 +311,7 @@ def main():
         '{{TM}}': TM, '{{QA}}': QA, '{{PY}}': PY,
         '{{TITLE}}': hstr(cfg['title']), '{{BADGE}}': hstr(cfg['badge']),
         '{{OVERVIEW}}': jsstr(cfg['overview']), '{{OVERVIEW2}}': jsstr(cfg.get('overview2', '')),
+        '{{SEARCH_PH}}': hstr(cfg.get('search_ph', '搜索人物 / 术语 / 展览')),
         '{{C1}}': cfg['c1'], '{{C2}}': cfg['c2'],
         '{{C1HEX}}': cfg['c1'].lstrip('#'),
         '{{REDBG}}': mix_white(cfg['c1']), '{{BLUEBG}}': mix_white(cfg['c2']),
@@ -298,7 +323,9 @@ def main():
         '{{F_MAIN}}': jsstr(cfg.get('f_main', '核心人物')),
         '{{F_SIDE}}': jsstr(cfg.get('f_side', '背景人物')),
         '{{FN_PARTS}}': json.dumps(cfg.get('fn_parts', []), ensure_ascii=False),
-        '{{FOOTER}}': hstr(cfg.get('footer') or 'Powered by 背背+skill · Recite-Buddy · MIT · github.com/K5LY/Recite-Buddy'),
+        '{{BOOKMETA}}': json.dumps(cfg.get('bookmeta', {}), ensure_ascii=False),
+        '{{OVERVIEW3}}': json.dumps(cfg.get('overview3', ''), ensure_ascii=False),
+        '{{FOOTER}}': hstr(cfg.get('footer') or 'Powered by Recite-Buddy · MIT · github.com/K5LY/Recite-Buddy'),
         '{{ALIAS}}': json.dumps(cfg.get('alias', []), ensure_ascii=False),
     }
     if appicon:

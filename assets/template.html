@@ -10,10 +10,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="{{APPTITLE}}">
+<meta name="theme-color" content="{{C1}}">
 <style>
 :root{
   --paper:#F6F4EE; --paper2:#EDEAE1; --ink:#23272B; --ink2:#5A5A55;
-  --line:#DFDBD0; --red:{{C1}}; --blue:{{C2}}; --redbg:{{REDBG}}; --bluebg:{{BLUEBG}};
+  --line:#DFDBD0; --card:#FFFFFF; --red:{{C1}}; --blue:{{C2}}; --redbg:{{REDBG}}; --bluebg:{{BLUEBG}};
   --ok:#3E7C4F; --warn:#A8762E;
 }
 @supports (background: color-mix(in srgb, red 10%, white)){
@@ -75,9 +76,15 @@ main{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;padding:12px 14px
 .sec-block .sb-b p{margin:0 0 14px;font-size:16px;text-align:justify;overflow-wrap:anywhere;word-break:break-word}
 .sec-block .sb-b p b{color:var(--red)}
 .exam-item{margin:12px 0;font-size:15px}
-.exam-item b{color:var(--red)}
-.mis-item{margin:12px 0;font-size:15px;color:#4A3A2A;background:var(--redbg);border-radius:8px;padding:8px 10px}
-.tips-box{margin:12px 0;font-size:15px;background:var(--bluebg);border-radius:8px;padding:8px 10px;color:#24404C}
+.exam-item b{color:var(--ink);font-weight:700}
+.sb-sub{font-size:14px;font-weight:700;color:var(--ink);margin:14px 0 4px}
+.sb-sub:first-child{margin-top:2px}
+.mis-item{margin:10px 0;font-size:15px;color:#4A3A2A;background:var(--redbg);border-radius:8px;padding:8px 10px;display:flex;gap:8px;align-items:flex-start}
+.tips-box{margin:10px 0;font-size:15px;background:var(--bluebg);border-radius:8px;padding:8px 10px;color:#24404C;display:flex;gap:8px;align-items:flex-start}
+.mis-item .num,.tips-box .num{flex:none;width:20px;height:20px;border-radius:50%;color:#fff;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-top:1px}
+.mis-item .num{background:var(--red)}
+.tips-box .num{background:var(--blue)}
+.mis-item .tx,.tips-box .tx{flex:1}
 table.sm{width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px;margin-top:6px}
 table.sm th{background:var(--paper2);border:1px solid var(--line);padding:6px 5px;text-align:center;font-weight:700}
 table.sm td{border:1px solid var(--line);padding:6px 5px;vertical-align:top}
@@ -96,14 +103,20 @@ table.sm td:first-child{text-align:center;font-weight:600;color:var(--red)}
 .flashcard{background:#fff;border:1px solid var(--line);border-radius:16px;min-height:300px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:26px 20px;text-align:center;position:relative;transform-style:preserve-3d;transition:transform .3s;cursor:pointer}
 .flashcard.flip{transform:rotateY(180deg)}
 .flashcard .face{backface-visibility:hidden;width:100%}
-.flashcard .back{position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:flex-start;padding:24px 20px;overflow-y:auto;-webkit-overflow-scrolling:touch;backface-visibility:hidden}
-.fc-tag{position:absolute;top:12px;left:14px;font-size:12px;color:#fff;border-radius:6px;padding:2px 8px}
+.flashcard .back{position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:flex-start;padding:24px 20px;overflow:hidden;backface-visibility:hidden}
+.fc-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 6px;min-height:24px}
+.fc-tag{font-size:12px;color:#fff;border-radius:999px;padding:3px 10px}
 .fc-tag.cn{background:var(--red)} .fc-tag.fn{background:var(--blue)}
+.fc-st{font-size:12px;font-weight:600}
+.fc-st.known{color:var(--ok)} .fc-st.again{color:var(--warn)}
 .fc-q{font-size:17px;font-weight:700;line-height:1.6}
-.fc-hint{font-size:12px;color:var(--ink2);margin-top:14px}
-.fc-a{font-size:15.5px;text-align:left;line-height:1.7;margin:auto 0}
+.fc-tip{display:inline-flex;align-items:center;gap:6px;margin:14px auto 0;padding:7px 24px;border-radius:999px;background:var(--redbg);color:var(--red);font-size:13px;font-weight:600;cursor:pointer;user-select:none}
+.fc-tip:active{opacity:.8}
+.fc-a{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;font-size:15.5px;text-align:left;line-height:1.7;margin:0}
 .recite-btns{display:flex;gap:10px}
 .fc-sched{font-size:12px;color:var(--ink2);text-align:center;margin:0 0 10px;padding:4px 8px;background:var(--paper);border:1px dashed var(--line);border-radius:8px}
+.back-btns{flex:0 0 auto;display:flex;gap:10px;margin-top:12px}
+.back-btns button{flex:1;border-radius:12px;padding:11px 0;font-size:15px;font-weight:700;color:#fff;border:0}
 .recite-btns button{flex:1;border-radius:12px;padding:12px 0;font-size:15px;font-weight:700;color:#fff}
 .b-known{background:var(--ok)} .b-again{background:var(--warn)}
 .progress{font-size:13px;color:var(--ink2);text-align:center;margin-bottom:8px;position:relative}
@@ -170,7 +183,39 @@ table.sm td:first-child{text-align:center;font-weight:600;color:var(--red)}
 .term-th span{display:block;font-size:12px;color:var(--ink2);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* 底部导航 */
-nav{flex:0 0 auto;position:fixed;left:0;right:0;bottom:0;background:rgba(247,246,241,.97);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:60}
+nav{flex:0 0 auto;position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid #D8D2C4;box-shadow:0 -3px 12px rgba(35,39,43,.07);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:60}
+/* 综合页（overview3 数据驱动，可空） */
+.ov{margin:0}
+.ov-sec{margin-bottom:14px}
+.ov-h{font-weight:700;font-size:14px;margin:14px 0 8px;color:var(--ink)}
+.ov-grid,.bk-grid{display:flex;flex-wrap:wrap;gap:8px}
+.ov-card{flex:1 1 100%;border:1px solid var(--line);border-radius:8px;padding:10px;font-size:13px;line-height:1.7;background:var(--card)}
+.ov-t{font-weight:700;margin-bottom:4px;color:var(--ink)}
+.ov-note{font-size:12.5px;color:var(--ink2);line-height:1.75;background:var(--bluebg);border-radius:6px;padding:8px 10px;margin-top:8px}
+.ov-dt{margin:0 2px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden}
+.ov-dt summary{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;font-size:13.5px;font-weight:600;color:var(--ink);cursor:pointer;list-style:none;min-height:44px;-webkit-tap-highlight-color:transparent}
+.ov-dt summary::-webkit-details-marker{display:none}
+.ov-dt summary::after{content:"＋";color:var(--ink2);font-size:16px;font-weight:400;flex:none}
+.ov-dt[open] summary::after{content:"－"}
+.ov-sm-t{font-size:11px;color:var(--ink2);font-weight:400;flex:none}
+.ov-inner{padding:2px 10px 12px;border-top:1px dashed var(--line)}
+.ov-inner .ov{margin:0}
+.bk-card{flex:1 1 100%;border:1px solid;border-left-width:4px;border-radius:8px;padding:10px 12px;font-size:13px;background:var(--card)}
+.bk-top{display:flex;align-items:center;gap:6px}
+.bk-dot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--red)}
+.bk-star{color:#C2A24A;font-size:12px;letter-spacing:1px}
+.bk-n{margin-left:auto;font-size:12px;color:var(--ink2);white-space:nowrap}
+.bk-sh{font-size:12px;color:var(--ink2);margin-top:3px}
+.bk-lv{font-size:11px;font-weight:700;border:1px solid;border-radius:9px;padding:1px 7px;flex:none}
+/* 书分组 header（chapters.book + config.bookmeta 驱动，无则不用） */
+.book-head{display:flex;align-items:center;gap:8px;margin:24px 4px 10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.book-head .b-dot{width:12px;height:12px;border-radius:50%;flex:none;box-shadow:0 0 0 3px rgba(0,0,0,.04)}
+.book-head b{font-size:16px;color:var(--ink)}
+.book-head .b-meta{font-size:12px;color:var(--ink2)}
+/* 章节卡片考点数徽标（书色边框+文字；0 考点 → 灰色「精读」） */
+.qn-badge{margin-left:auto;font-size:11px;font-weight:700;border:1px solid;border-radius:9px;padding:2px 9px;flex:none;white-space:nowrap}
+.qn-badge.zero{color:var(--ink2);border-color:var(--line)}
+.ch-card .head{gap:10px}
 /* 页脚水印：低调小字，不参与交互、不遮挡内容 */
 .rb-footer{text-align:center;font-size:11px;line-height:1.6;color:var(--ink2);padding:2px 16px calc(64px + env(safe-area-inset-bottom));opacity:.72;user-select:none;pointer-events:none}
 nav .tab{flex:1;text-align:center;padding:9px 0 8px;color:var(--ink2);font-size:12px;display:flex;flex-direction:column;align-items:center;gap:3px}
@@ -190,11 +235,13 @@ nav .tab.fn-side.on{color:var(--blue)}
 
 /* 考点热链与 QA 抽屉 */
 .qa-hint{font-size:12.5px;color:var(--ink2);background:var(--bluebg);border-radius:8px;padding:6px 10px;margin:8px 0 4px}
-.exam-item{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px}
-.exam-link{flex:0 0 auto;color:#fff;background:var(--red);border-radius:6px;padding:2px 10px;font-size:13.5px;font-weight:700;cursor:pointer;text-decoration:none}
-.exam-link:active{opacity:.8}
+.exam-item{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;transition:opacity .15s}
+.exam-item:active{opacity:.85}
+.exam-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.exam-link{flex:0 0 auto;color:#fff;background:var(--red);border-radius:999px;padding:3px 12px;font-size:13px;font-weight:700}
 .exam-link.fn-side{background:var(--blue)}
-.exam-body{flex:1 1 0;min-width:200px}
+.exam-arr{flex:0 0 auto;font-size:12px;color:var(--ink2);white-space:nowrap}
+.exam-body{margin-top:7px;font-size:15px;line-height:1.65;color:var(--ink);overflow-wrap:anywhere;word-break:break-word}
 .qa-head{display:flex;align-items:center;gap:10px;margin:2px 0 6px}
 .qa-level{font-size:12px;font-weight:700;color:#fff;border-radius:6px;padding:3px 9px}
 .qa-level.cn{background:var(--red)} .qa-level.fn{background:var(--blue)}
@@ -211,7 +258,12 @@ rt{font-size:.6em;line-height:1;color:#6E6A61;font-weight:400}
 @media (min-width:900px){
   main{max-width:760px;margin:0 auto}
   header{max-width:760px;margin:0 auto;left:0;right:0}
-  nav{max-width:760px;left:50%;right:auto;transform:translateX(-50%)}
+  nav{width:min(760px,100vw);max-width:760px;left:50%;right:auto;transform:translateX(-50%);justify-content:center;gap:14px;padding:14px 16px calc(14px + env(safe-area-inset-bottom))}
+  nav .tab{flex:none;width:auto;min-width:116px;flex-direction:row;align-items:center;gap:8px;padding:10px 20px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+  nav .tab .ic{width:26px;height:26px}
+  nav .tab{font-size:14px}
+  nav .tab.on{background:var(--red);color:#fff;border-color:var(--red);font-weight:700}
+  nav .tab.fn-side.on{background:var(--blue);color:#fff;border-color:var(--blue)}
 }
 
 
@@ -230,7 +282,7 @@ main{padding-top:calc(94px + env(safe-area-inset-top));padding-bottom:calc(16px 
 <header>
   <div class="brand"><span class="t serif">{{TITLE}}</span><span class="s">{{BADGE}}</span></div>
   <div class="searchwrap">
-    <input id="q" type="search" placeholder="搜索人物 / 术语 / 展览" autocomplete="off">
+    <input id="q" type="search" placeholder="{{SEARCH_PH}}" autocomplete="off">
     <div class="searchres" id="qres"></div>
   </div>
 </header>
@@ -265,7 +317,7 @@ const PY = {{PY}};
 const $ = (s,el=document)=>el.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const partOf = ch => CH.find(c=>c.id===ch);
-const chName = ch => {const c=partOf(ch); return c? c.no+' · '+c.title.replace(/^第.章\s*/,''):'';};
+const chName = ch => {const c=partOf(ch); if(!c) return ''; const nm=c.title.replace(/^第.章\s*/,''); const b=(c.book&&BOOKMETA[c.book]&&BOOKMETA[c.book].short)?BOOKMETA[c.book].short:''; return b? b+' · '+nm : c.no+' · '+nm;};
 const WKIDX = {}; WK.forEach(w=>WKIDX[w.id]=w);
 const TMIDX = {}; TM.forEach(t=>TMIDX[t.id]=t);
 /* 知识内链词典：作品名 + 自动链接术语，长词优先 */
@@ -328,9 +380,17 @@ function applyRuby(txt){
 }
 /* 统一渲染：先知识内链，再注音 */
 const fmt = txt => applyRuby(linkify(txt));
+/* 自链剥离：抽屉正文中指向当前条目自身的链接还原为纯文本（避免点了没意义） */
+function stripSelf(html, id){
+  if(!html) return html;
+  return html.replace(new RegExp('<a class="ilink" onclick="linkGo\\((openWork|openTerm),\\\''+id+'\\\',event\\)">([^<]*)</a>','g'), '$2');
+}
 const store = {get(k,d){try{const v=localStorage.getItem('{{PREFIX}}'+k);return v?JSON.parse(v):d;}catch(e){return d;}},set(k,v){try{localStorage.setItem('{{PREFIX}}'+k,JSON.stringify(v));}catch(e){}}};
 let current = {view:'chapters', ch:null, reciteFilter:'all', rq:null, wfilter:'all', wq:''};
 const fnParts = {{FN_PARTS}} || []; // 副色篇名列表（config.fn_parts），数据驱动主副色
+const BOOKMETA = {{BOOKMETA}} || {};  // 书级元数据（config.bookmeta）：{书id:{short,color,desc}}，数据驱动书分组
+const OVERVIEW3 = {{OVERVIEW3}} || ''; // 综合页 HTML 块（config.overview3，数据驱动，可空）
+
 const isFnPart = p => fnParts.includes(p);
 
 /* ===== 路由 ===== */
@@ -383,21 +443,45 @@ function backChapter(){
   }
 }
 function taglineOf(ch){
-  const labs = ch.sections.map(s=>s[0]).filter(Boolean).slice(0,3);
+  const labs = ch.sections.map(s=>s[0]).filter(Boolean).slice(0,3).map(t=>t.replace(/[。；]+$/,''));
   return labs.length? labs.join(' · ') : '精读';
 }
 function renderChapters(){
   chStack.length = 0;
-  const list = CH.slice();
-  let h = '<div class="sec-title cn">{{OVERVIEW}}</div>';
+  let h = '';
+  if(OVERVIEW3) h += '<div class="ov">'+OVERVIEW3+'</div>';
+  h += '<div class="sec-title cn">{{OVERVIEW}}</div>';
   h += '<div style="font-size:13.5px;color:var(--ink2);margin:0 2px 10px">{{OVERVIEW2}}</div>';
-  list.forEach(c=>h+=chCard(c));
+  const byBook = {};
+  CH.forEach(c=>{ if(c.book){ (byBook[c.book]=byBook[c.book]||[]).push(c); } });
+  const bidList = Object.keys(byBook);
+  if(bidList.length){
+    bidList.forEach(bid=>{
+      const list = byBook[bid];
+      const meta = BOOKMETA[bid] || {};
+      const totalQa = list.reduce((s,c)=>s+(c.exam?c.exam.length:0),0);
+      const color = meta.color || 'var(--red)';
+      h += '<div class="book-head"><span class="b-dot" style="background:'+color+'"></span><b style="color:'+color+'">'+esc(bid)+'</b><span class="b-meta">'+list.length+' 章 · '+totalQa+' 考点</span></div>';
+      list.forEach(c=>h+=chCard(c,color));
+    });
+  } else {
+    CH.forEach(c=>h+=chCard(c));
+  }
   $('#main').innerHTML = h;
+  setTimeout(()=>{
+    document.querySelectorAll('.ov-dt').forEach(d=>{
+      const key = 'ovopen'+(d.dataset.ov?('_'+d.dataset.ov):'');
+      d.open = !!store.get(key,false);
+      d.addEventListener('toggle',e=>store.set(key,e.target.open));
+    });
+  },0);
 }
-function chCard(c){
+function chCard(c,bcolor){
   const isFn = isFnPart(c.part);
+  const noBg = bcolor || (isFn?'var(--blue)':'var(--red)');
+  const qa = c.exam?c.exam.length:0;
   return '<div class="ch-card '+(isFn?'fn':'cn')+'" role="button" tabindex="0" onclick="gotoChapter(\''+c.id+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();gotoChapter(\''+c.id+'\')}">'+
-    '<div class="head"><span class="no">'+esc(c.no)+'</span><span class="tt serif">'+esc(c.title.replace(/^第.章\s*/,''))+'</span></div>'+
+    '<div class="head"><span class="no" style="background:'+noBg+'">'+esc(c.no)+'</span><span class="tt serif">'+esc(c.title.replace(/^第.章\s*/,''))+'</span>'+(qa?'<span class="qn-badge" style="border-color:'+noBg+';color:'+noBg+'">'+qa+' 考点</span>':'<span class="qn-badge zero">精读</span>')+'</div>'+
     '<div class="kw">'+taglineOf(c).split(' · ').map(k=>'<span>'+esc(k)+'</span>').join('')+'</div></div>';
 }
 function renderChapter(id){
@@ -406,16 +490,17 @@ function renderChapter(id){
   const prev = CH[CH.indexOf(c)-1], next = CH[CH.indexOf(c)+1];
   const backInfo = chStack.length? (chStack[chStack.length-1].t==='ch'?'上一章':'知识点') : '';
   const backBar = chStack.length? '<div class="backbar">← <b onclick="backChapter()">返回'+backInfo+'</b></div>' : '';
-  let h = backBar + '<div class="crumbs"><b onclick="chStack.length=0;nav(\'chapters\')">目录</b> / '+esc(c.no+' '+c.title.replace(/^第.章\s*/,''))+'</div>';
-  h += '<div class="ch-title serif">'+esc(c.no+' '+c.title.replace(/^第.章\s*/,''))+'</div>';
+  let h = backBar + '<div class="crumbs"><b onclick="chStack.length=0;nav(\'chapters\')">目录</b> / '+esc(chName(c.id))+'</div>';
+  h += '<div class="ch-title serif">'+esc(chName(c.id))+'</div>';
   h += '<div class="ch-sub">'+esc(taglineOf(c))+'</div>';
   h += secBlock('01 考纲对应考点',
-    (c.exam&&c.exam.length?'<div class="sb-b"><div class="qa-hint">点击考点标签（考点1 / 2 / 3…）→ 查看标准答案与答题结构模板</div>'+c.exam.map((e,i)=>examHTML(e,i,id)).join('')+'</div>':'<div class="sb-b"><div class="qa-hint">本章为次要章节，无独立考点条目；按分段精读、易错点与备考要点复习即可。</div></div>'), true);
+    (c.exam&&c.exam.length?'<div class="sb-b"><div class="qa-hint">点击考点标签，查看标准答案与答题结构模板</div>'+c.exam.map((e,i)=>examHTML(e,i,id)).join('')+'</div>':'<div class="sb-b"><div class="qa-hint">本章为次要章节，无独立考点条目；按分段精读、易错点与备考要点复习即可。</div></div>'), true);
   h += secBlock('02 分段精读解析',
     '<div class="sb-b">'+c.sections.map(s=>'<p>'+(s[0]?'<b>'+esc(s[0])+'</b> ':'')+fmt(s[1])+'</p>').join('')+'</div>', true);
   h += secBlock('03 易错点与备考要点',
-    '<div class="sb-b">'+c.mistakes.map(m=>'<div class="mis-item">'+fmt(m)+'</div>').join('')+
-    (c.tips&&c.tips.length?c.tips.map(t=>'<div class="tips-box">'+fmt(t)+'</div>').join(''):'')+'</div>', true);
+    '<div class="sb-b">'+
+    (c.mistakes&&c.mistakes.length?'<div class="sb-sub">易错点</div>'+c.mistakes.map((m,i)=>'<div class="mis-item"><span class="num">'+(i+1)+'</span><span class="tx">'+fmt(m)+'</span></div>').join(''):'')+
+    (c.tips&&c.tips.length?'<div class="sb-sub">备考要点</div>'+c.tips.map((t,i)=>'<div class="tips-box"><span class="num">'+(i+1)+'</span><span class="tx">'+fmt(t)+'</span></div>').join(''):'')+'</div>', true);
   if(c.summary){
     h += secBlock('04 知识总结（速查表）',
       '<div class="sb-b"><table class="sm"><colgroup>'+c.summary.headers.map((x,i)=>'<col style="width:'+(100/c.summary.headers.length)+'%">').join('')+'</colgroup><tr>'+
@@ -424,12 +509,14 @@ function renderChapter(id){
   }
   // 相关连接：本章作品 + 前后章
   const chWorks = WK.filter(w=>w.ch===id);
-  h += '<div class="linkbar"><div class="lb-t">本章相关人物（点击查看）</div>';
+  const chTerms = TM.filter(t=>t.ch===id);
+  h += '<div class="linkbar"><div class="lb-t">本章档案（人物 · 术语）</div>';
   chWorks.forEach(w=>h+='<span class="chip w" onclick="openWork(\''+w.id+'\')">'+esc(w.name)+'</span>');
+  chTerms.forEach(t=>h+='<span class="chip" onclick="openTerm(\''+t.id+'\')">'+esc(t.name)+'</span>');
   h += '</div>';
   h += '<div class="linkbar"><div class="lb-t">章节连接</div>';
-  if(prev) h+='<span class="chip" onclick="gotoChapter(\''+prev.id+'\')">← '+esc(prev.no+' '+prev.title.replace(/^第.章\s*/,''))+'</span>';
-  if(next) h+='<span class="chip" onclick="gotoChapter(\''+next.id+'\')">'+esc(next.no+' '+next.title.replace(/^第.章\s*/,''))+' →</span>';
+  if(prev) h+='<span class="chip" onclick="gotoChapter(\''+prev.id+'\')">← '+esc(chName(prev.id))+'</span>';
+  if(next) h+='<span class="chip" onclick="gotoChapter(\''+next.id+'\')">'+esc(chName(next.id))+' ›</span>';
   h += '</div>';
   $('#main').innerHTML = h;
 }
@@ -444,12 +531,12 @@ function examHTML(e, idx, chid){
   const label = m? m[1]+'（'+m[2]+'）' : ('考点'+(idx+1));
   const body = m? m[3] : e;
   const isFn = isFnPart((partOf(chid)||{}).part);
-  return '<div class="exam-item"><a class="exam-link'+(isFn?' fn-side':'')+'" onclick="event.stopPropagation();openQA(\''+chid+'\','+idx+')">'+esc(label)+'</a>'+
-    '<span class="exam-body">'+fmt(body)+'</span></div>';
+  return '<div class="exam-item" onclick="openQA(\''+chid+'\','+idx+')"><div class="exam-head"><span class="exam-link'+(isFn?' fn-side':'')+'">'+esc(label)+'</span><span class="exam-arr">答题 ›</span></div>'+
+    '<div class="exam-body">'+applyRuby(esc(body))+'</div></div>';
 }
 
-/* ===== 背诵闪卡 · SM-2 复习调度 ===== */
-CD.forEach((c,i)=>{ c.id='cd'+i; });
+/* ===== 背诵闪卡 · 复习调度 ===== */
+CD.forEach((c,i)=>{ if(!c.id) c.id='cd'+i; }); // id 缺失时兜底生成（build.py 已注入则尊重数据 id）
 const DAY = 86400000;
 const cardState = store.get('cardstate',{});
 // 调度状态归一化：兼容旧版字符串值（'known'/'again'）
@@ -497,7 +584,7 @@ function renderRecite(){
   const filter = current.reciteFilter;
   const s = statsOf();
   $('#main').innerHTML =
-    '<div class="sec-title cn">背诵闪卡 · 点击卡片看答案</div>'+
+    '<div class="sec-title cn">背诵闪卡</div>'+
     '<div class="progress" id="stats"></div>'+
     '<div class="recite-toolbar">'+
     Object.keys(RLAB).map(f=>'<button class="rbtn'+(filter===f?' on':'')+'" onclick="setRFilter(\''+f+'\')">'+(f==='due'?'今日到期 '+s.due:RLAB[f])+'</button>').join('')+
@@ -537,7 +624,7 @@ function startRecite(){
     current.ri = prog.idx;
     current.right = prog.right||0;
     if(prog.wrong && prog.wrong.length) current.rq.forEach(c=>{ c._again = prog.wrong.includes(c.id); });
-    // 还原已评分标记（刷新后回看再评仍按回滚逻辑，不双重推进）
+    // 还原已评分标记（刷新后同轮回看再评仍按回滚逻辑，不双重推进）；到期与否由 markCard 统一判定
     if(prog.graded) current.rq.forEach(c=>{ const g=prog.graded[c.id]; if(g){ c._graded=true; c._prevSrs=g.p; c._lastOk=g.ok; } });
   } else {
     current.rq = shufPool(pool); current.ri = 0;
@@ -576,28 +663,28 @@ function showCard(){
   const pc = partOf(c.ch);
   const isFn = isFnPart(pc.part);
   const st = srsOf(c.id);
-  const stTag = st.st==='known'?'<span style="position:absolute;top:12px;right:14px;font-size:12px;color:var(--ok)">已掌握</span>':(st.st==='again'?'<span style="position:absolute;top:12px;right:14px;font-size:12px;color:var(--warn)">需巩固</span>':'');
+  const stTag = st.st==='known'?'<span class="fc-st known">已掌握</span>':(st.st==='again'?'<span class="fc-st again">需巩固</span>':'<span></span>');
   const now = Date.now();
   let sched;
-  if(st.next && st.next<=now) sched = '<div class="fc-sched"><b style="color:var(--red)">今日到期</b> · 间隔 '+st.ivl+' 天 · ease '+st.ease.toFixed(2)+'</div>';
-  else if(st.reps) sched = '<div class="fc-sched">'+fmtDue(st.next)+' · 间隔 '+st.ivl+' 天 · ease '+st.ease.toFixed(2)+'</div>';
+  if(st.next && st.next<=now) sched = '<div class="fc-sched"><b style="color:var(--red)">今日到期</b> · 间隔 '+st.ivl+' 天 · 难度 '+st.ease.toFixed(2)+'</div>';
+  else if(st.reps) sched = '<div class="fc-sched">'+fmtDue(st.next)+' · 间隔 '+st.ivl+' 天 · 难度 '+st.ease.toFixed(2)+'</div>';
   else sched = '<div class="fc-sched">新卡 · 记住后 1 天复查</div>';
   wrap.innerHTML = bar +
+    '<div class="fc-row"><span class="fc-tag '+(isFn?'fn':'cn')+'">'+esc(chName(pc.id))+'</span>'+stTag+'</div>'+
     '<div class="card-wrap"><div class="flashcard" id="fc" onclick="flipCard()">'+
-      '<span class="fc-tag '+(isFn?'fn':'cn')+'">'+esc(pc.no)+' · '+esc(pc.part)+'</span>'+stTag+
-      '<div class="face"><div class="fc-q">'+esc(c.q)+'</div><div class="fc-hint">点卡片显示答案</div></div>'+
-      '<div class="back"><div class="fc-a">'+fmt(c.a)+'</div></div>'+
+      '<div class="face"><div class="fc-q">'+esc(c.q)+'</div><div class="fc-tip" onclick="event.stopPropagation();flipCard()"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"/></svg><span>看答案</span></div></div>'+
+      '<div class="back" onclick="event.stopPropagation()"><div class="fc-a">'+fmt(c.a)+'</div><div class="back-btns"><button class="b-known" onclick="event.stopPropagation();markCard(1)">记住了</button><button class="b-again" onclick="event.stopPropagation();markCard(0)">没记住</button></div></div>'+
     '</div></div>'+
-    sched+
-    '<div class="recite-btns"><button class="b-known" onclick="markCard(1)">记住了</button><button class="b-again" onclick="markCard(0)">没记住</button></div>';
+    sched;
 }
 function flipCard(){ $('#fc').classList.toggle('flip'); }
 function prevCard(){ if(current.ri>0){ current.ri--; saveProg(); showCard(); } }
 function markCard(ok){
   const c = current.rq[current.ri];
   let st = srsOf(c.id);
-  if(c._graded){
-    // 回看后重评：先撤销上次评分（调度与计数回滚），再按新评分写入
+  if(c._graded && !(st.next && st.next<=Date.now())){
+    // 回看后重评（卡未到期）：先撤销上次评分（调度与计数回滚），再按新评分写入。
+    // 到期卡属于新的复习周期，走新评分路径，避免跨会话到期重考被误判为回看覆盖（间隔永远不增长）
     if(c._lastOk) current.right = Math.max(0, current.right-1);
     srsSet(c.id, c._prevSrs);
     st = srsOf(c.id);
@@ -660,7 +747,7 @@ function tnode(n,isFn){
     const w = WKIDX[r];
     if(w) return '<span class="chip w" onclick="event.stopPropagation();openWork(\''+w.id+'\')">'+esc(w.name)+'</span>';
     const c = partOf(r);
-    if(c) return '<span class="chip" onclick="event.stopPropagation();gotoChapter(\''+c.id+'\')">'+esc(c.no+' '+c.title.replace(/^第.章\s*/,''))+'</span>';
+    if(c) return '<span class="chip" onclick="event.stopPropagation();gotoChapter(\''+c.id+'\')">'+esc(chName(c.id))+'</span>';
     return '';
   }).join('');
   return '<div class="tnode"><div class="nt">'+esc(n[0])+'</div><div class="nd">'+fmt(n[1])+'</div>'+(links?'<div class="nl">'+links+'</div>':'')+'</div>';
@@ -736,18 +823,21 @@ function renderWork(id, back){
     const t2 = TMIDX[r];
     if(t2) return '<span class="chip" onclick="openTerm(\''+t2.id+'\')">'+esc(t2.name)+'</span>';
     const c2 = partOf(r);
-    if(c2) return '<span class="chip" onclick="gotoChapter(\''+c2.id+'\')">'+esc(c2.no+' '+c2.title.replace(/^第.章\s*/,''))+'</span>';
+    if(c2) return '<span class="chip" onclick="gotoChapter(\''+c2.id+'\')">'+esc(chName(c2.id))+'</span>';
     return '';
   }).join('');
   const tags = (w.tags||[]).map(t=>'<span class="chip">'+esc(t)+'</span>').join('');
+  const l1 = w.kind==='work' ? '基本信息' : '生平履历';
+  const l2 = w.kind==='work' ? '核心特征' : '核心思想';
+  const l3 = w.kind==='work' ? '意义与影响' : '代表展览与贡献';
   $('#drsheet').innerHTML = back +
     '<div class="grip"></div>'+
     '<div class="dw-name serif">'+esc(w.name)+'</div>'+
     '<div class="dw-meta"><span class="chip" onclick="gotoChapter(\''+w.ch+'\')">'+esc(chName(w.ch))+'</span> · '+esc(w.period)+'</div>'+
-    (w.img? '<div class="dw-img"><img src="'+w.img+'" alt="'+esc(w.name)+'" loading="lazy"'+(w.img_kind==='web'?' class="web"':'')+' onclick="this.classList.toggle(\'big\')"><div class="dw-img-cap">'+esc(w.img_cap||w.name+'（作品图）')+'</div>'+(w.img_kind==='web'?'<div class="dw-img-src">网络补充图 · '+esc(w.img_src)+'</div>':'<div class="dw-img-src">教材插图</div>')+'</div>' : '')+
-    '<div class="dw-row"><div class="lb">生平履历</div><div class="val">'+fmt(w.info)+'</div></div>'+
-    '<div class="dw-row"><div class="lb">核心思想</div><div class="val">'+fmt(w.analysis)+'</div></div>'+
-    '<div class="dw-row"><div class="lb">代表展览与贡献</div><div class="val">'+fmt(w.meaning)+'</div></div>'+
+    (w.img? '<div class="dw-img"><img src="'+esc(w.img)+'" alt="'+esc(w.name)+'" loading="lazy"'+(w.img_kind==='web'?' class="web"':'')+' onclick="this.classList.toggle(\'big\')"><div class="dw-img-cap">'+esc(w.img_cap||w.name+'（作品图）')+'</div>'+(w.img_kind==='web'?'<div class="dw-img-src">网络补充图 · '+esc(w.img_src)+'</div>':'<div class="dw-img-src">教材插图</div>')+'</div>' : '')+
+    '<div class="dw-row"><div class="lb">'+l1+'</div><div class="val">'+stripSelf(fmt(w.info), w.id)+'</div></div>'+
+    '<div class="dw-row"><div class="lb">'+l2+'</div><div class="val">'+stripSelf(fmt(w.analysis), w.id)+'</div></div>'+
+    '<div class="dw-row"><div class="lb">'+l3+'</div><div class="val">'+stripSelf(fmt(w.meaning), w.id)+'</div></div>'+
     '<div class="dw-row"><div class="lb">关联人物 / 术语 / 章节</div><div>'+links+'</div></div>'+
     '<div class="dw-row"><div class="lb">标签</div><div>'+tags+'</div></div>';
 }
@@ -757,7 +847,7 @@ function renderTerm(id, back){
   const ws = (t.works||[]).map(r=>{
     const w = WKIDX[r];
     if(!w) return '';
-    if(w.img) return '<span class="term-th" onclick="openWork(\''+w.id+'\')"><img src="'+w.img+'" alt="" loading="lazy"><span>'+esc(w.name)+'</span></span>';
+    if(w.img) return '<span class="term-th" onclick="openWork(\''+w.id+'\')"><img src="'+esc(w.img)+'" alt="" loading="lazy"><span>'+esc(w.name)+'</span></span>';
     return '<span class="chip w" onclick="openWork(\''+w.id+'\')">'+esc(w.name)+'</span>';
   }).join('');
   const ts = (t.terms||[]).map(r=>{
@@ -767,11 +857,11 @@ function renderTerm(id, back){
   $('#drsheet').innerHTML = back +
     '<div class="grip"></div>'+
     '<div class="dw-name serif">'+esc(t.name)+'</div>'+
-    '<div class="dw-meta"><span class="chip" onclick="gotoChapter(\''+c.id+'\')">'+esc(c.no+' '+c.title.replace(/^第.章\s*/,''))+'</span></div>'+
-    (t.img? '<div class="dw-img"><img src="'+t.img+'" alt="'+esc(t.name)+'" loading="lazy"'+(t.img_kind==='web'?' class="web"':'')+' onclick="this.classList.toggle(\'big\')"><div class="dw-img-cap">'+esc(t.img_cap||t.name+'（实景/作品图）')+'</div>'+(t.img_kind==='web'?'<div class="dw-img-src">网络补充图 · '+esc(t.img_src)+'</div>':'<div class="dw-img-src">教材插图</div>')+'</div>' : '')+
-    '<div class="dw-row"><div class="lb">概念解释</div><div class="term-def">'+fmt(t.def)+'</div></div>'+
-    (ws?'<div class="dw-row"><div class="lb">相关人物（点击查看）</div><div>'+ws+'</div></div>':'')+
-    (ts?'<div class="dw-row"><div class="lb">相关概念（可继续跳转）</div><div>'+ts+'</div></div>':'');
+    '<div class="dw-meta"><span class="chip" onclick="gotoChapter(\''+c.id+'\')">'+esc(chName(c.id))+'</span></div>'+
+    (t.img? '<div class="dw-img"><img src="'+esc(t.img)+'" alt="'+esc(t.name)+'" loading="lazy"'+(t.img_kind==='web'?' class="web"':'')+' onclick="this.classList.toggle(\'big\')"><div class="dw-img-cap">'+esc(t.img_cap||t.name+'（实景/作品图）')+'</div>'+(t.img_kind==='web'?'<div class="dw-img-src">网络补充图 · '+esc(t.img_src)+'</div>':'<div class="dw-img-src">教材插图</div>')+'</div>' : '')+
+    '<div class="dw-row"><div class="lb">概念解释</div><div class="term-def">'+stripSelf(fmt(t.def), t.id)+'</div></div>'+
+    (ws?'<div class="dw-row"><div class="lb">相关人物</div><div>'+ws+'</div></div>':'')+
+    (ts?'<div class="dw-row"><div class="lb">相关概念</div><div>'+ts+'</div></div>':'');
 }
 function renderQA(chid, idx, back){
   const qa = QA[chid][idx]; if(!qa) return;
@@ -787,16 +877,16 @@ function renderQA(chid, idx, back){
     const t = TMIDX[r];
     if(t) return '<span class="chip" onclick="openTerm(\''+t.id+'\')">'+esc(t.name)+'</span>';
     const c2 = partOf(r);
-    if(c2) return '<span class="chip" onclick="gotoChapter(\''+c2.id+'\')">'+esc(c2.no+' '+c2.title.replace(/^第.章\s*/,''))+'</span>';
+    if(c2) return '<span class="chip" onclick="gotoChapter(\''+c2.id+'\')">'+esc(chName(c2.id))+'</span>';
     return '';
   }).join('');
   $('#drsheet').innerHTML = back +
     '<div class="grip"></div>'+
-    '<div class="qa-head"><span class="qa-level '+(isFn?'fn':'cn')+'">'+level+'</span><span class="dw-name serif">考点'+(idx+1)+'</span>'+
-    '<span class="chip" onclick="gotoChapter(\''+chid+'\')">'+esc(c.no+' '+c.title.replace(/^第.章\s*/,''))+'</span></div>'+
+    '<div class="qa-head"><span class="qa-level '+(isFn?'fn':'cn')+'">'+esc(level)+'</span><span class="dw-name serif">考点'+(idx+1)+'</span>'+
+    '<span class="chip" onclick="gotoChapter(\''+chid+'\')">'+esc(chName(c.id))+'</span></div>'+
     '<div class="qa-q">'+fmt(qBody)+'</div>'+
     '<div class="dw-row"><div class="lb">标准答案（可直接背诵）</div><div class="val"><ol class="qa-list">'+qa.answer.map(a=>'<li>'+fmt(a)+'</li>').join('')+'</ol></div></div>'+
-    '<div class="dw-row"><div class="lb">怎么答题（结构模板）</div><div class="val"><ol class="qa-tpl">'+(qa.template||[]).map(t=>'<li>'+fmt(t)+'</li>').join('')+'</ol></div></div>'+
+    '<div class="dw-row"><div class="lb">怎么答题（结构模板）</div><div class="val"><ol class="qa-tpl">'+(qa.template||[]).map(t=>'<li>'+fmt(t.replace(/[。；]+$/,''))+'</li>').join('')+'</ol></div></div>'+
     (links?'<div class="dw-row"><div class="lb">相关知识点</div><div>'+links+'</div></div>':'')+
     '<button class="qa-goto" onclick="dstack.length=0;$(\'#drawer\').classList.remove(\'open\')">返回本章继续学习</button>';
 }
@@ -809,7 +899,13 @@ function doSearch(){
   const res = [];
   WK.forEach(w=>{ if(w.name.toLowerCase().includes(q) || w.tags.some(t=>t.toLowerCase().includes(q))) res.push({k:'人物',t:w.name,go:()=>openWork(w.id)}); });
   TM.forEach(t=>{ if((t.name||'').toLowerCase().includes(q) || (t.def||'').toLowerCase().includes(q)) res.push({k:'概念',t:t.name,go:()=>openTerm(t.id)}); });
-  CH.forEach(c=>{ if((c.title||'').includes(q) || (c.exam||[]).join('').includes(q)) res.push({k:'章节',t:c.no+' '+c.title,go:()=>{closeSearch();gotoChapter(c.id);}}); });
+  CH.forEach(c=>{ if((c.title||'').includes(q) || (c.exam||[]).join('').includes(q)) res.push({k:'章节',t:chName(c.id),go:()=>{closeSearch();gotoChapter(c.id);}}); });
+  // 别名可搜：LINK_DICT 含词典别名（ALIAS），命中后跳主条目（同名本名已在上方命中时跳过）
+  LINK_DICT.forEach(a=>{
+    if(!a.name || !a.name.toLowerCase().includes(q)) return;
+    if(a.type==='w'){ const w=WK.find(x=>x.id===a.id); if(w && !res.some(r=>r.k==='人物'&&r.t===w.name)) res.push({k:'人物',t:w.name,go:()=>openWork(a.id)}); }
+    else if(a.type==='t'){ const t=TM.find(x=>x.id===a.id); if(t && !res.some(r=>r.k==='概念'&&r.t===t.name)) res.push({k:'概念',t:t.name,go:()=>openTerm(a.id)}); }
+  });
   CD.forEach(cd=>{ if((cd.q||'').toLowerCase().includes(q)) res.push({k:'闪卡',t:cd.q.slice(0,26)+'…',go:()=>{closeSearch();current.reciteFilter='all';window.__gotoFlash=cd.id;location.hash='#recite';renderRecite();setTimeout(()=>{const i=current.rq.findIndex(x=>x.id===window.__gotoFlash);if(i>=0){current.ri=i;saveProg();showCard();}window.__gotoFlash=null;},60);}}); });
   // 结果项通过 searchGo(i) 索引委托调用，避免内联 onclick 引用闭包变量失效
   window.__sres = res.slice(0,12);
