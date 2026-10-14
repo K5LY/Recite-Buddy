@@ -15,6 +15,7 @@
 """
 import argparse
 import os
+import re
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -25,6 +26,24 @@ FONT_CANDIDATES = [
     'C:/Windows/Fonts/msyhbd.ttc',
 ]
 
+# Pillow ≥ 8.2 才提供 ImageDraw.textbbox / rounded_rectangle
+_MIN_PILLOW = (8, 2)
+
+
+def _pillow_ok():
+    import PIL
+    ver = tuple(int(x) for x in PIL.__version__.split('.')[:2])
+    return ver >= _MIN_PILLOW
+
+
+def _parse_hex(s):
+    h = s.strip().lstrip('#')
+    if len(h) == 3:  # 三位简写 #3AF -> #33AAFF
+        h = ''.join(c * 2 for c in h)
+    if not re.fullmatch(r'[0-9A-Fa-f]{6}', h):
+        raise SystemExit(f'主色不是合法 hex: {s}（支持 #RGB 或 #RRGGBB）')
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
 
 def find_font():
     for p in FONT_CANDIDATES:
@@ -34,15 +53,20 @@ def find_font():
 
 
 def main():
+    if not _pillow_ok():
+        raise SystemExit('Pillow 版本过低：make_icon.py 需要 Pillow ≥ 8.2，请升级 pip install -U Pillow')
     ap = argparse.ArgumentParser()
     ap.add_argument('char', help='图标汉字，如 美 / 展')
     ap.add_argument('color', help='主色 hex，如 #3A5F4F')
     ap.add_argument('out', help='输出 PNG 路径')
     ap.add_argument('--size', type=int, default=180)
     a = ap.parse_args()
+    if len(a.char) != 1:
+        raise SystemExit('图标汉字必须是单个字符')
+    if a.size < 60 or a.size > 1024:
+        raise SystemExit('--size 建议 60–1024（默认 180）')
 
-    color = a.color.lstrip('#')
-    rgb = tuple(int(color[i:i + 2], 16) for i in (0, 2, 4))
+    rgb = _parse_hex(a.color)
     n = a.size
     img = Image.new('RGBA', (n, n), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
