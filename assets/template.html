@@ -557,7 +557,7 @@ function fmtDue(t){
   const d = Math.round(diff/DAY);
   return d===1 ? '明天' : d+' 天后';
 }
-const RLAB = {all:'全部',due:'今日到期',new:'未学',weak:'需巩固'};
+const RLAB = {all:'全部',new:'未学',weak:'需巩固'};
 function statsOf(){
   const now = Date.now();
   const total = CD.length;
@@ -587,8 +587,7 @@ function renderRecite(){
     '<div class="sec-title cn">背诵闪卡</div>'+
     '<div class="progress" id="stats"></div>'+
     '<div class="recite-toolbar">'+
-    Object.keys(RLAB).map(f=>'<button class="rbtn'+(filter===f?' on':'')+'" onclick="setRFilter(\''+f+'\')">'+(f==='due'?'今日到期 '+s.due:RLAB[f])+'</button>').join('')+
-    '<button class="rbtn" onclick="startRecite()">继续/重开</button>'+
+    Object.keys(RLAB).map(f=>'<button class="rbtn'+(filter===f?' on':'')+'" onclick="setRFilter(\''+f+'\')">'+RLAB[f]+'</button>').join('')+
     '<button class="rbtn" onclick="resetProgress()">清空进度</button></div>'+
     '<div id="rarea"></div>';
   renderStats();
@@ -600,7 +599,6 @@ function buildPool(f){
   let p = CD.slice();
   if(f==='new') p = p.filter(c=>!srsOf(c.id).st);
   else if(f==='weak') p = p.filter(c=>srsOf(c.id).st==='again');
-  else if(f==='due') p = p.filter(c=>srsOf(c.id).next && srsOf(c.id).next<=now);
   // all 分支无需按 rk 排序：到期置顶由 shufPool 统一处理，此处仅返回全集
   return p;
 }
@@ -928,6 +926,30 @@ document.addEventListener('click', function(e){
   if(h) h.parentElement.classList.toggle('open');
 });
 $('#drmask').addEventListener('click', closeDrawer);
+/* 抽屉下滑关闭（移动端触摸）：内容在顶部时下拉跟随，松手超阈值关闭；中部滚动不误关；小拖动回弹；桌面不受影响 */
+(function(){
+  var sheet=$('#drsheet'), st=null, TH=160;
+  sheet.addEventListener('touchstart', function(e){
+    if(sheet.scrollTop>0){ st=null; return; }
+    st={y:e.touches[0].clientY, dy:0, moved:false};
+  }, {passive:true});
+  sheet.addEventListener('touchmove', function(e){
+    if(!st) return;
+    var dy=e.touches[0].clientY-st.y;
+    if(dy<=0){ if(st.dy>0){ st.dy=0; sheet.style.transition=''; sheet.style.transform=''; } return; }
+    if(dy>8) st.moved=true;
+    st.dy=dy;
+    sheet.style.transition='none';
+    sheet.style.transform='translateY('+Math.min(dy,TH)+'px)';
+    e.preventDefault();
+  }, {passive:false});
+  sheet.addEventListener('touchend', function(){
+    if(!st) return;
+    var dy=st.dy, moved=st.moved; st=null;
+    sheet.style.transition=''; sheet.style.transform='';
+    if(moved && dy>TH) closeDrawer();
+  });
+})();
 window.addEventListener('hashchange', router);
 router();
 </script>
